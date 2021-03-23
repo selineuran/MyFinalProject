@@ -6,8 +6,6 @@ output: html_document
 
 Data Origins
 
-Homelessness within Greater London in the UK
-
 Research Questions
 
 Data Preparation
