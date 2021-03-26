@@ -22,12 +22,12 @@ library(readxl)
 data1 <- read_excel("~/myfinalproject/processed/data1.xlsx")
 View(data1)
 
-d1<- ggplot(data1, aes(x = factor(years), y = number, fill = country, 
-                       group = country)) +
+d1<- ggplot(data1, aes(x = factor(years), y = number, fill = Country, 
+                       group = Country)) +
   geom_line() +
   geom_point(size = 2, shape = 21) +
-  labs(y="Years", x = "Number of People") +
-  labs(title = "Number of Rough Sleepers in Greater London by Nationality")
+  labs(y="Number of People", x = "Years") +
+  labs(title = "Number of Rough Sleepers in England and London")
 
 d1
 
@@ -40,34 +40,16 @@ ggsave("figures/d1.png")
 data2 <- read_excel("~/myfinalproject/processed/data2.xlsx")
 View(data2)
 
-d2<- ggplot(data2, aes(x = factor(years), y = percentage, fill = country, 
-                       group = country)) +
+d2<- ggplot(data2, aes(x = factor(years), y = number, fill = Country, 
+                       group = Country)) +
   geom_line() +
   geom_point(size = 2, shape = 21) +
-  labs(y="Years", x = "Percentage") +
-  labs(title = "Percentage of Rough Sleepers in Greater London by Nationality")
+  labs(y="Number of People", x = "Years") +
+  labs(title = "Number of Rough Sleepers in UK by region")
 
 d2
 
 ggsave("figures/d2.png")
-
-```
-
-```{r = diagram3, echo=FALSE}
-
-data3 <- read_excel("~/myfinalproject/processed/data3.xlsx")
-View(data3)
-
-d3<- ggplot(data3, aes(x = factor(years), y = number, fill = SupportNeed, 
-                            group = SupportNeed)) +
-  geom_line() +
-  geom_point(size = 2, shape = 21) +
-  labs(y="Years", x = "Number of People") +
-  labs(title = "Support Needs of Rough Sleepers in Greater London")
-
-d3
-
-ggsave("figures/d3.png")
 
 ```
 
