@@ -12,7 +12,7 @@ Data Preparation
 
 Visualisation
 
-```{r = diagram1, echo=FALSE}
+```{r = diagram1, echo=FALSE, message=FALSE}
 
 #Here is my data visualisation project for the module PSY6422. 
 
@@ -36,7 +36,7 @@ ggsave("figures/d1.png")
 ``` 
 
 
-```{r = diagram2, echo=FALSE}
+```{r = diagram2, echo=FALSE, message=FALSE}
 data2 <- read_excel("~/myfinalproject/processed/data2.xlsx")
 View(data2)
 
