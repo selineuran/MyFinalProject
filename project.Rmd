@@ -13,47 +13,67 @@ Data Preparation
 Visualisation
 
 ```{r = diagram1, echo=FALSE, message=FALSE}
-
-#Here is my data visualisation project for the module PSY6422. 
-
 library(ggplot2)
 library(readxl)
 library(RColorBrewer)
 library(scales)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
 
-data1 <- read_excel("~/myfinalproject/processed/data1.xlsx")
-View(data1)
+rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 
-d1<- ggplot(data1, aes(x = factor(years), y = number, fill = Country, 
-                       group = Country)) +
+rs1<- rawdata %>% slice(1:2)
+
+rs1$`Local authority ONS code`<-NULL
+rs1$`Region ONS code`<-NULL
+rs1$`Local authority`<-NULL
+
+rs1_long <- rs1 %>% 
+  gather(Year, Number, -Region)
+rs1_long
+
+rs1plot <- ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Region)) +
+  geom_point() +
   geom_line() +
-  geom_point(size = 2, shape = 21) +
-  labs(y="Number of People", x = "Years") +
-  labs(title = "Number of Rough Sleepers in England and London")
+  scale_color_brewer(palette = 'Dark2') +
+  theme_classic(base_size = 12)
 
-d1
-
-ggsave("figures/d1.png")
+rs1plot
+ggsave("figures/rs1plot.png")
 
 ``` 
 
 
 ```{r = diagram2, echo=FALSE, message=FALSE}
-data2 <- read_excel("~/myfinalproject/processed/data2.xlsx")
-View(data2)
+rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
+View(rawdata)
 
-d2<- ggplot(data2, aes(x = factor(years), y = number, fill = Country, 
-                       group = Country)) +
+rs2<- rawdata %>% slice(1:11)
+
+rs2$`Local authority ONS code`<-NULL
+rs2$`Local authority`<-NULL
+rs2$`Region ONS code`<- NULL
+
+rs2<- rs2[-c(1:3), ]
+
+rs2_long <- rs2 %>% 
+  gather(Year, Number, -Region)
+rs2_long
+
+rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Region)) +
+  geom_point() +
   geom_line() +
-  geom_point(size = 2, shape = 21) +
-  labs(y="Number of People", x = "Years") +
-  labs(title = "Number of Rough Sleepers in UK by region")
+  scale_color_brewer(palette = 'Dark2') +
+  theme_classic(base_size = 12)
 
-d2
+rs2plot
 
-ggsave("figures/d2.png")
+ggsave("figures/rs2plot.png")
 
 ```
+
+
 ```{r = diagram3, echo=FALSE, message=FALSE}
 
 data4 <- read_excel("~/myfinalproject/processed/data4.xlsx")
@@ -65,8 +85,6 @@ d4 <- data.frame(
   value = c(35, 24, 19, 13, 11, 11, 10)
   )
 
-
-# Barplot
 bp<- ggplot(d4, aes(x="", y=value, fill=Group))+
   geom_bar(width = 1, stat = "identity")
 
@@ -81,7 +99,6 @@ blank_theme <- theme_minimal()+
     plot.title=element_text(size=14, face="bold")
   )
 
-#The piechart....
 pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
   theme(axis.text.x=element_blank())+
   geom_text(aes(y = value/3 + c(0, cumsum(value)[-length(value)]), 
