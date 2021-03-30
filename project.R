@@ -3,6 +3,7 @@
 library(ggplot2)
 library(readxl)
 library(RColorBrewer)
+library(dplyr)
 
 #Change the scale on the below graph on the Y axis
 
@@ -22,5 +23,27 @@ d2
 
 rawdata <- read_excel("~/myfinalproject/raw/rs_statistics.xlsx")
 View(rawdata)
+
+rd1 <- data.frame(a = 1:10, b = 2:11, c = 3:12)
+df <- subset(df, select = c(a, c))
+
+rd1<- rawdata %>% slice(1:11)
+
+rd1$`Local authority ONS code`<-NULL
+rd1$`Local authority`<-NULL
+rd1$`Region ONS code`<- NULL
+
+View(rd1)
+
+
+rd2<- rawdata %>% slice(12:325)
+
+rd2$`Local authority ONS code`<-NULL
+rd2$`Region ONS code`<-NULL
+
+View(rd2)
+
+#Look at how to convert from long to wide format
+
 
 
