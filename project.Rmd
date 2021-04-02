@@ -3,16 +3,9 @@ title: "My Data Visualisation Project"
 author: "Seline Uran"
 output: html_document
 ---
-
-Data Origins
-
-Research Questions
-
-Data Preparation
-
-Visualisation
-
 ```{r = diagram1, echo=FALSE, message=FALSE}
+#To begin load the following libraries in RStudio for all future tasks
+
 library(ggplot2)
 library(readxl)
 library(RColorBrewer)
@@ -20,34 +13,27 @@ library(scales)
 library(dplyr)
 library(tidyr)
 library(tidyverse)
+```
 
+<span style="text-decoration:underline">Data Origins</span>
+
+<span style="text-decoration:underline">Research Questions</span>
+
+<span style="text-decoration:underline">Data Preparation</span>
+
+
+<span style="text-decoration:underline">Main Diagram</span>
+ 
+
+For the main visualisation I performed the following steps before visualising 
+the data. 
+
+
+
+<span style="text-decoration:underline">Visualisation</span>
+
+```{r = maindiagram, echo=FALSE, message=FALSE, results='hide'}
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
-
-rs1<- rawdata %>% slice(1:2)
-
-rs1$`Local authority ONS code`<-NULL
-rs1$`Region ONS code`<-NULL
-rs1$`Local authority`<-NULL
-
-rs1_long <- rs1 %>% 
-  gather(Year, Number, -Region)
-rs1_long
-
-rs1plot <- ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Region)) +
-  geom_point() +
-  geom_line() +
-  scale_color_brewer(palette = 'Dark2') +
-  theme_classic(base_size = 12)
-
-rs1plot
-ggsave("figures/rs1plot.png")
-
-``` 
-
-
-```{r = diagram2, echo=FALSE, message=FALSE}
-rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
-View(rawdata)
 
 rs2<- rawdata %>% slice(1:11)
 
@@ -74,10 +60,35 @@ ggsave("figures/rs2plot.png")
 ```
 
 
-```{r = diagram3, echo=FALSE, message=FALSE}
+
+```{r = diagram2, echo=FALSE, message=FALSE, results='hide'}
+rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
+
+rs1<- rawdata %>% slice(1:2)
+
+rs1$`Local authority ONS code`<-NULL
+rs1$`Region ONS code`<-NULL
+rs1$`Local authority`<-NULL
+
+rs1_long <- rs1 %>% 
+  gather(Year, Number, -Region)
+rs1_long
+
+rs1plot <- ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Region)) +
+  geom_point() +
+  geom_line() +
+  scale_color_brewer(palette = 'Dark2') +
+  theme_classic(base_size = 12)
+
+rs1plot
+ggsave("figures/rs1plot.png")
+
+``` 
+
+
+```{r = diagram3, echo=FALSE, message=FALSE, results='hide'}
 
 data4 <- read_excel("~/myfinalproject/processed/data4.xlsx")
-View(data4)
 
 d4 <- data.frame(
   Group = c("Leeds", "Sheffield", "Kingston upon Hull, City of", "Doncaster", 
@@ -109,7 +120,9 @@ pie
 
 
 
-Summary
+<span style="text-decoration:underline">Summary</span>
 
-Future Directions
+
+<span style="text-decoration:underline">Future Directions</span>
+
 
