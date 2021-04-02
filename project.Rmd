@@ -21,7 +21,6 @@ library(tidyverse)
 
 <span style="text-decoration:underline">Data Preparation</span>
 
-
 <span style="text-decoration:underline">Main Diagram</span>
  
 
