@@ -114,7 +114,6 @@ pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
   geom_text(aes(y = value/3 + c(0, cumsum(value)[-length(value)]), 
                 label = percent(value/100)), size=0)
 
-pie
 ```
 
 
