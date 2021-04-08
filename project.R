@@ -65,16 +65,42 @@ ggsave("figures/rs1plot.png")
 #------------------------------------------------------------------------------
 #The third supporting graph - this time a piechart
 
-data4 <- read_excel("~/myfinalproject/processed/data4.xlsx")
-View(data4)
+rs3 <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 
-d4 <- data.frame(
-  Group = c("Leeds", "Sheffield", "Kingston upon Hull, City of", "Doncaster", 
-            "East Riding of Yorkshire", "Scarborough", "Barnsley"),
-  value = c(35, 24, 19, 13, 11, 11, 10))
+#First the data preparation...
+
+rs3<- rawdata %>% slice(1:11)
+rs3<- rs3[-c(1:3), ]
+rs3$`Local authority ONS code`<-NULL
+rs3$`Local authority`<-NULL
+rs3$`Region ONS code`<- NULL
+
+view(rs3)
+
+rs3$`2010`<-NULL
+rs3$`2011`<-NULL
+rs3$`2012`<- NULL
+rs3$`2013`<-NULL
+rs3$`2014`<-NULL
+rs3$`2015`<- NULL
+rs3$`2016`<-NULL
+rs3$`2017`<-NULL
+rs3$`2018`<- NULL
+rs3$`2019`<-NULL
+
+view(rs3)
+
+rs3_long <- rs3 %>% 
+  gather(Year, Number, -Region)
+
+view(rs3_long)
+
+rs3pie<- data.frame(rs3_long)
+
+view(rs3pie)
 
 # First you must generate a barplot of the data
-bp<- ggplot(d4, aes(x="", y=value, fill=Group))+
+bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity")
 
 #Then plot the data into a piechart as below
@@ -90,12 +116,13 @@ blank_theme <- theme_minimal()+
     plot.title=element_text(size=14, face="bold")
   )
 
+
 #This template is then added to the piechart and the aesthetics can be adjusted 
-  #as needed The piechart....
+#as needed The piechart....
 pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
   theme(axis.text.x=element_blank())+
-  geom_text(aes(y = value/3 + c(0, cumsum(value)[-length(value)]), 
-                label = percent(value/100)), size=0)
+  geom_text(aes(y = Number/3 + c(0, cumsum(Number)[-length(Number)]), 
+                label = percent(Number/100)), size=0)
 
 #The piechart....
 pie
@@ -180,15 +207,40 @@ rs1plot
 
 #Replace data currently in pie chart with the RS in each region of England data
 
-data4 <- read_excel("~/myfinalproject/processed/data4.xlsx")
+rs3 <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
+rs3<- rawdata %>% slice(1:11)
 
-d4 <- data.frame(
-  Group = c("Leeds", "Sheffield", "Kingston upon Hull, City of", "Doncaster", 
-            "East Riding of Yorkshire", "Scarborough", "Barnsley"),
-  value = c(35, 24, 19, 13, 11, 11, 10)
-)
+rs3<- rs3[-c(1:3), ]
 
-bp<- ggplot(d4, aes(x="", y=value, fill=Group))+
+rs3$`Local authority ONS code`<-NULL
+rs3$`Local authority`<-NULL
+rs3$`Region ONS code`<- NULL
+
+view(rs3)
+
+rs3$`2010`<-NULL
+rs3$`2011`<-NULL
+rs3$`2012`<- NULL
+rs3$`2013`<-NULL
+rs3$`2014`<-NULL
+rs3$`2015`<- NULL
+rs3$`2016`<-NULL
+rs3$`2017`<-NULL
+rs3$`2018`<- NULL
+rs3$`2019`<-NULL
+
+view(rs3)
+
+rs3_long <- rs3 %>% 
+  gather(Year, Number, -Region)
+
+view(rs3_long)
+
+rs3pie<- data.frame(rs3_long)
+
+view(rs3pie)
+
+bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity")
 
 pie <- bp + coord_polar("y", start=0)
@@ -204,7 +256,11 @@ blank_theme <- theme_minimal()+
 
 pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
   theme(axis.text.x=element_blank())+
-  geom_text(aes(y = value/3 + c(0, cumsum(value)[-length(value)]), 
-                label = percent(value/100)), size=0)
+  geom_text(aes(y = Number/3 + c(0, cumsum(Number)[-length(Number)]), 
+                label = percent(Number/100)), size=0)
 
 pie
+
+
+
+#
