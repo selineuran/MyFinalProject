@@ -20,7 +20,7 @@ library(tidyverse)
 
 <span style="text-decoration:underline">Data Preparation</span>
 
-After having removed all sheets from the excel document except for that which contained the total number of rough sleepers I began data preparation. To begin preparing the data for my project's main visualization I imported the raw data as seen below. 
+After having removed all sheets from the excel document except for the sheet that contained the total number of rough sleepers I began data preparation. To begin I imported the raw data. 
 
 ```{r}
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
@@ -111,7 +111,7 @@ ggsave("figures/rs2plot.png")
 ```
 
 
-Pie chart
+Supporting Visualisation
 
 ```{r = diagram3,echo=FALSE, message=FALSE, results='hide'}
 rs3pie<- data.frame(rs3_long)

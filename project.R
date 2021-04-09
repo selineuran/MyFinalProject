@@ -37,35 +37,9 @@ rs2plot
 ggsave("figures/rs2plot.png")
 
 #------------------------------------------------------------------------------
-#The secondary supporting graph 
+#The supporting graph - a piechart
 
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
-View(rawdata)
-
-rs1<- rawdata %>% slice(1:2)
-
-rs1$`Local authority ONS code`<-NULL
-rs1$`Region ONS code`<-NULL
-rs1$`Local authority`<-NULL
-
-rs1_long <- rs1 %>% 
-  gather(Year, Number, -Region)
-rs1_long
-
-rs1plot <- ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Region)) +
-  geom_point() +
-  geom_line() +
-  scale_color_brewer(palette = 'Dark2') +
-  theme_classic(base_size = 12)
-
-rs1plot
-ggsave("figures/rs1plot.png")
-
-
-#------------------------------------------------------------------------------
-#The third supporting graph - this time a piechart
-
-rs3 <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 
 #First the data preparation...
 
@@ -74,9 +48,6 @@ rs3<- rs3[-c(1:3), ]
 rs3$`Local authority ONS code`<-NULL
 rs3$`Local authority`<-NULL
 rs3$`Region ONS code`<- NULL
-
-view(rs3)
-
 rs3$`2010`<-NULL
 rs3$`2011`<-NULL
 rs3$`2012`<- NULL
@@ -101,40 +72,50 @@ view(rs3pie)
 
 # First you must generate a barplot of the data
 bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
-  geom_bar(width = 1, stat = "identity")
+  geom_bar(width = 1, stat = "identity") + 
+  geom_text(aes(label = paste(round(Number / sum(Number) * 100, 1), "%"), x = 1.7),
+            position = position_stack(vjust = 0.5)) +
+  ggtitle("help") +
+  theme(axis.text = element_blank(),
+           axis.title = element_blank(),
+           axis.ticks = element_blank(),
+           panel.grid  = element_blank(),
+           legend.position="none",
+           line = element_blank()
+) + scale_fill_brewer(palette="Dark2")
+
 
 #Then plot the data into a piechart as below
-pie<- bp + coord_polar("y", start=0) + 
-    theme_void() # remove background, grid, numeric labels
+piechart<- bp + coord_polar("y", start=0) + 
+  theme_void() + # remove background, grid, numeric labels
+  ggtitle("Proportion of rough sleepers by region in England in 2020")
 
-#Use a template to stylise the piechart to your individual preference 
-blank_theme <- theme_minimal()+
-  theme(
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    panel.border = element_blank(),
-    panel.grid=element_blank(),
-    plot.title=element_text(size=14, face="bold")
-  )
+piechart
 
+#------------------------------------------------------------------------------
+#other graph 
 
-#This template is then added to the piechart and the aesthetics can be adjusted 
-#as needed The piechart....
-pie<- pie + scale_fill_brewer(palette="Dark2")  + blank_theme +
-  theme(axis.text.x=element_blank())+
-  geom_text(aes(y = Number/3 + c(0, cumsum(Number)[-length(Number)]), 
-                label = percent(Number/100)), size=0)
+rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
+View(rawdata)
 
-#Or remove the theme and keep only the colour palette
-pie<- bp + coord_polar("y", start=0) + 
-  scale_fill_brewer(palette="Dark2") +
-  theme_void() # remove background, grid, numeric labels
+rs1<- rawdata %>% slice(1:2)
 
+rs1$`Local authority ONS code`<-NULL
+rs1$`Region ONS code`<-NULL
+rs1$`Local authority`<-NULL
 
-#The piechart....
-pie
+rs1_long <- rs1 %>% 
+  gather(Year, Number, -Region)
+rs1_long
 
+rs1plot <- ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Region)) +
+  geom_point() +
+  geom_line() +
+  scale_color_brewer(palette = 'Dark2') +
+  theme_classic(base_size = 12)
 
+rs1plot
+ggsave("figures/rs1plot.png")
 
 
 #To do list for the project----------------------------------------------------
