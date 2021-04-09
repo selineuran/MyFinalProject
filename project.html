@@ -199,68 +199,17 @@ summary {
 <p><span style="text-decoration:underline">Data Preparation</span></p>
 <p>After having removed all sheets from the excel document except for that which contained the total number of rough sleepers I began data preparation. To begin preparing the data for my project’s main visualization I imported the raw data as seen below.</p>
 <pre class="r"><code>rawdata &lt;- read_excel(&quot;~/myfinalproject/processed/rs_statistics.xlsx&quot;)</code></pre>
-<p>The raw daw data provided the number of rough sleepers within all regions of England. In addition, there was data on the number of rough sleepers in each each Local Authority of each region witin England.</p>
-<p>Since I was interested in comparing the number of rough sleepers in England by region I selected only these rows from the raw data as below.</p>
-<pre class="r"><code>rs2&lt;- rawdata %&gt;% slice(1:11)
-
-rs2</code></pre>
-<pre><code>## # A tibble: 11 x 15
-##    `Local authorit~ `Local authorit~ Region `Region ONS cod~ `2010` `2011`
-##    &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt;  &lt;dbl&gt;
-##  1 &lt;NA&gt;             &lt;NA&gt;             Engla~ E92000001          1768   2181
-##  2 &lt;NA&gt;             &lt;NA&gt;             London E12000007           415    446
-##  3 &lt;NA&gt;             &lt;NA&gt;             Rest ~ -                  1353   1735
-##  4 &lt;NA&gt;             &lt;NA&gt;             East ~ E12000004           121    188
-##  5 &lt;NA&gt;             &lt;NA&gt;             East ~ E12000006           206    242
-##  6 &lt;NA&gt;             &lt;NA&gt;             North~ E12000001            49     32
-##  7 &lt;NA&gt;             &lt;NA&gt;             North~ E12000002           100    149
-##  8 &lt;NA&gt;             &lt;NA&gt;             South~ E12000008           310    430
-##  9 &lt;NA&gt;             &lt;NA&gt;             South~ E12000009           270    337
-## 10 &lt;NA&gt;             &lt;NA&gt;             West ~ E12000005           182    207
-## 11 &lt;NA&gt;             &lt;NA&gt;             Yorks~ E12000003           115    150
-## # ... with 9 more variables: `2012` &lt;dbl&gt;, `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;,
-## #   `2015` &lt;dbl&gt;, `2016` &lt;dbl&gt;, `2017` &lt;dbl&gt;, `2018` &lt;dbl&gt;, `2019` &lt;dbl&gt;,
-## #   `2020` &lt;dbl&gt;</code></pre>
-<p>I aimed to compare the number of rough sleepers by each region within England as such I removed the rows containing summary counts for England, London and the Rest of England.</p>
-<pre class="r"><code>rs2&lt;- rs2[-c(1:3), ]
-
-rs2</code></pre>
-<pre><code>## # A tibble: 8 x 15
-##   `Local authorit~ `Local authorit~ Region `Region ONS cod~ `2010` `2011` `2012`
-##   &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;  &lt;chr&gt;             &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1 &lt;NA&gt;             &lt;NA&gt;             East ~ E12000004           121    188    137
-## 2 &lt;NA&gt;             &lt;NA&gt;             East ~ E12000006           206    242    276
-## 3 &lt;NA&gt;             &lt;NA&gt;             North~ E12000001            49     32     62
-## 4 &lt;NA&gt;             &lt;NA&gt;             North~ E12000002           100    149    147
-## 5 &lt;NA&gt;             &lt;NA&gt;             South~ E12000008           310    430    442
-## 6 &lt;NA&gt;             &lt;NA&gt;             South~ E12000009           270    337    301
-## 7 &lt;NA&gt;             &lt;NA&gt;             West ~ E12000005           182    207    230
-## 8 &lt;NA&gt;             &lt;NA&gt;             Yorks~ E12000003           115    150    157
-## # ... with 8 more variables: `2013` &lt;dbl&gt;, `2014` &lt;dbl&gt;, `2015` &lt;dbl&gt;,
-## #   `2016` &lt;dbl&gt;, `2017` &lt;dbl&gt;, `2018` &lt;dbl&gt;, `2019` &lt;dbl&gt;, `2020` &lt;dbl&gt;</code></pre>
-<p>I also removed the colums associted with information on Local Authorities and ONS code associated with each region which was not necessary to the visualisation.</p>
-<pre class="r"><code>rs2$`Local authority ONS code`&lt;-NULL
-rs2$`Local authority`&lt;-NULL
-rs2$`Region ONS code`&lt;- NULL
-
-rs2[1:12]</code></pre>
-<pre><code>## # A tibble: 8 x 12
-##   Region `2010` `2011` `2012` `2013` `2014` `2015` `2016` `2017` `2018` `2019`
-##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1 East ~    121    188    137    206    193    208    255    313    358    305
-## 2 East ~    206    242    276    296    302    418    604    615    484    458
-## 3 North~     49     32     62     25     35     38     45     51     66     67
-## 4 North~    100    149    147    152    189    220    313    434    428    349
-## 5 South~    310    430    442    532    609    827    956   1119    934    900
-## 6 South~    270    337    301    308    362    509    536    580    458    490
-## 7 West ~    182    207    230    223    186    249    289    295    420    319
-## 8 Yorks~    115    150    157    129    126    160    172    207    246    242
-## # ... with 1 more variable: `2020` &lt;dbl&gt;</code></pre>
+<p>The raw data detailed the number of rough sleepers within England and included individual counts for each region of England and each Local Authority within the each region.</p>
+<p>For my data visualisation I was interested in visualising the number of rough sleepers in all the regions of England across the last 10 years, as such I began by removing thewe rows from the original dataset (as shown below).</p>
+<pre class="r"><code>rs2&lt;- rawdata %&gt;% slice(1:11)</code></pre>
+<p>Since I aimed to visualize the number of rough sleepers in each region individually within England I removed the rows containing summary counts for ‘England’, ‘London’ and the ‘Rest of England’.</p>
+<pre class="r"><code>rs2&lt;- rs2[-c(1:3), ]</code></pre>
+<p>In addition to removing data associated with each Local Authority (which was not be part of the visualization) I also removed the columns that contained information relating to the ONS code associated with each region and Local Authority in England.</p>
 <p>Finally, I converted the data from a wide to a long format so that it would be in a preferred format for generating a graph with ggplot2.</p>
 <pre class="r"><code>rs2_long &lt;- rs2 %&gt;% 
-  gather(Year, Number, -Region)
-
-head(rs2_long, 16)</code></pre>
+  gather(Year, Number, -Region)</code></pre>
+<p>This produced a tibble of the dataset is included below to provide an example of the data in a ‘long’ (as opposed to a wide) format.</p>
+<pre class="r"><code>head(rs2_long, 16)</code></pre>
 <pre><code>## # A tibble: 16 x 3
 ##    Region                   Year  Number
 ##    &lt;chr&gt;                    &lt;chr&gt;  &lt;dbl&gt;
@@ -280,7 +229,7 @@ head(rs2_long, 16)</code></pre>
 ## 14 South West               2011     337
 ## 15 West Midlands            2011     207
 ## 16 Yorkshire and The Humber 2011     150</code></pre>
-<p>I then performed the same steps to prepare the data for the second graph - the piechart.</p>
+<p>I then performed the same steps to prepare the data for the second graph to be visualised; a pie chart of all the rough sleepers in 2020 in each regions of England.</p>
 <pre class="r"><code>rs3 &lt;- read_excel(&quot;~/myfinalproject/processed/rs_statistics.xlsx&quot;)
 
 rs3&lt;- rawdata %&gt;% slice(1:11)
@@ -290,7 +239,6 @@ rs3&lt;- rs3[-c(1:3), ]
 rs3$`Local authority ONS code`&lt;-NULL
 rs3$`Local authority`&lt;-NULL
 rs3$`Region ONS code`&lt;- NULL
-
 rs3$`2010`&lt;-NULL
 rs3$`2011`&lt;-NULL
 rs3$`2012`&lt;- NULL

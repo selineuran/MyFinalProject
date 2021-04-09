@@ -23,31 +23,26 @@ library(tidyverse)
 After having removed all sheets from the excel document except for that which contained the total number of rough sleepers I began data preparation. To begin preparing the data for my project's main visualization I imported the raw data as seen below. 
 
 ```{r}
-
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 ```
 
-The raw daw data provided the number of rough sleepers within all regions of England. In addition, there was data on the number of rough sleepers in each each Local Authority of each region witin England. 
+The raw data detailed the number of rough sleepers within England and included individual counts for each region of England and each Local Authority within the each region. 
 
-Since I was interested in comparing the number of rough sleepers in England by region I selected only these rows from the raw data as below. 
+For my data visualisation I was interested in visualising the number of rough sleepers in all the regions of England across the last 10 years, as such I began by removing thewe rows from the original dataset (as shown below). 
 
 ```{r}
 rs2<- rawdata %>% slice(1:11)
-
-rs2
 ```
 
-I aimed to compare the number of rough sleepers by each region within England as such I removed the rows containing summary counts for England, London and the Rest of England. 
+Since I aimed to visualize the number of rough sleepers in each region individually within England I removed the rows containing summary counts for 'England', 'London' and the 'Rest of England'. 
 
 ```{r}
 rs2<- rs2[-c(1:3), ]
-
-rs2
 ```
 
-I also removed the colums associted with information on Local Authorities and ONS code associated with each region which was not necessary to the visualisation. 
+In addition to removing data associated with each Local Authority (which was not be part of the visualization) I also removed the columns that contained information relating to the ONS code associated with each region and Local Authority in England.
 
-```{r}
+```{r, echo=FALSE, message=FALSE, results='hide'}
 rs2$`Local authority ONS code`<-NULL
 rs2$`Local authority`<-NULL
 rs2$`Region ONS code`<- NULL
@@ -60,11 +55,16 @@ Finally, I converted the data from a wide to a long format so that it would be i
 ```{r}
 rs2_long <- rs2 %>% 
   gather(Year, Number, -Region)
+```
 
+
+This produced a tibble of the dataset is included below to provide an example of the data in a 'long' (as opposed to a wide) format. 
+
+```{r}
 head(rs2_long, 16)
 ```
 
-I then performed the same steps to prepare the data for the second graph - the piechart. 
+I then performed the same steps to prepare the data for the second graph to be visualised; a pie chart of all the rough sleepers in 2020 in each regions of England. 
 
 ```{r}
 rs3 <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
@@ -76,7 +76,6 @@ rs3<- rs3[-c(1:3), ]
 rs3$`Local authority ONS code`<-NULL
 rs3$`Local authority`<-NULL
 rs3$`Region ONS code`<- NULL
-
 rs3$`2010`<-NULL
 rs3$`2011`<-NULL
 rs3$`2012`<- NULL
