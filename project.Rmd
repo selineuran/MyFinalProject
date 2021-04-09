@@ -58,16 +58,16 @@ rs2_long <- rs2 %>%
 ```
 
 
-This produced a tibble of the dataset is included below to provide an example of the data in a 'long' (as opposed to a wide) format. 
+The tibble below shows a short section of the output and exemplifies the 'long' (as opposed to a wide) format the data set had been converted to. 
 
 ```{r}
 head(rs2_long, 16)
 ```
 
-I then performed the same steps to prepare the data for the second graph to be visualised; a pie chart of all the rough sleepers in 2020 in each regions of England. 
+I then performed the same steps to prepare the data for the second graph to be visualised; a pie chart of all the rough sleepers in 2020 in each region of England. 
 
 ```{r}
-rs3 <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
+rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 
 rs3<- rawdata %>% slice(1:11)
 
@@ -89,8 +89,6 @@ rs3$`2019`<-NULL
 
 rs3_long <- rs3 %>% 
   gather(Year, Number, -Region)
-
-rs3_long
 ```
 
 
@@ -101,7 +99,7 @@ The Main Visualisation
 ```{r = maindiagram, echo=FALSE, message=FALSE, results='hide'}
 rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Region)) +
   geom_point() +
-  geom_line() +
+  geom_line(position = position_dodge(0.4)) +
   scale_color_brewer(palette = 'Dark2') +
   theme_classic(base_size = 12)
 
@@ -111,7 +109,7 @@ ggsave("figures/rs2plot.png")
 ```
 
 
-Piechart
+Pie chart
 
 ```{r = diagram3,echo=FALSE, message=FALSE, results='hide'}
 rs3pie<- data.frame(rs3_long)
@@ -121,21 +119,11 @@ bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
 
 pie <- bp + coord_polar("y", start=0)
 
-blank_theme <- theme_minimal()+
-  theme(
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    panel.border = element_blank(),
-    panel.grid=element_blank(),
-    plot.title=element_text(size=14, face="bold")
-  )
+pieplot <- pie + scale_fill_brewer(palette="Dark2") +  theme_void()
 
-pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
-  theme(axis.text.x=element_blank())+
-  geom_text(aes(y = Number/3 + c(0, cumsum(Number)[-length(Number)]), 
-                label = percent(Number/100)), size=0)
+pieplot
 
-pie
+ggsave("figures/pieplot.png")
 ```
 
 

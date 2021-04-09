@@ -1,4 +1,4 @@
-#Developing code for the project-----------------------------
+#Developing the project-----------------------------
 
 library(ggplot2)
 library(readxl)
@@ -28,7 +28,7 @@ rs2_long
 
 rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Region)) +
   geom_point() +
-  geom_line() +
+  geom_line(position = position_dodge(0.4)) +
   scale_color_brewer(palette = 'Dark2') +
   theme_classic(base_size = 12)
 
@@ -104,7 +104,8 @@ bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity")
 
 #Then plot the data into a piechart as below
-pie <- bp + coord_polar("y", start=0)
+pie<- bp + coord_polar("y", start=0) + 
+    theme_void() # remove background, grid, numeric labels
 
 #Use a template to stylise the piechart to your individual preference 
 blank_theme <- theme_minimal()+
@@ -119,10 +120,16 @@ blank_theme <- theme_minimal()+
 
 #This template is then added to the piechart and the aesthetics can be adjusted 
 #as needed The piechart....
-pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
+pie<- pie + scale_fill_brewer(palette="Dark2")  + blank_theme +
   theme(axis.text.x=element_blank())+
   geom_text(aes(y = Number/3 + c(0, cumsum(Number)[-length(Number)]), 
                 label = percent(Number/100)), size=0)
+
+#Or remove the theme and keep only the colour palette
+pie<- bp + coord_polar("y", start=0) + 
+  scale_fill_brewer(palette="Dark2") +
+  theme_void() # remove background, grid, numeric labels
+
 
 #The piechart....
 pie
@@ -143,7 +150,7 @@ geom_line(position = position_dodge(0.2)) +           # Dodge lines by 0.2
 rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, 
   color = Region, group = Region)) +
   geom_point() +
-  geom_line() +
+  geom_line(position = position_dodge(0.4)) +
   scale_color_brewer(palette = 'Dark2') +
   theme_classic(base_size = 10)
 
@@ -258,7 +265,6 @@ pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
   theme(axis.text.x=element_blank())+
   geom_text(aes(y = Number/3 + c(0, cumsum(Number)[-length(Number)]), 
                 label = percent(Number/100)), size=0)
-
 pie
 
 
