@@ -133,10 +133,20 @@ rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number,
   geom_point() +
   geom_line(position = position_dodge(0.4)) +
   scale_color_brewer(palette = 'Dark2') +
-  theme_classic(base_size = 10)
+  theme_classic(base_size = 12) +
+  theme(axis.text.x = element_text(face= "bold", color="black", 
+                                 size=7),
+        axis.text.y = element_text(face= "bold", color="black", 
+                                  size=7),
+        axis.line = element_line(colour = "black", 
+                    size = 1, linetype = "solid")) +
+  labs(title="Number of Rough Sleepers in each Region of England",
+       x="Number of Rough Sleepers", y = "Year") + 
+  scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200))
+        
 
 rs2plot
-
+breaks= c("0", "300","600","900","1200")
 
 #Look at the data wrangling recording at how to manipulate the data
 
