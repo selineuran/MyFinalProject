@@ -110,7 +110,7 @@ rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Reg
                                   size=7),
         axis.line = element_line(colour = "black", 
                     size = 1, linetype = "solid")) +
-  labs(title="Number of Rough Sleepers in each Region of England (2010 - 2020",
+  labs(title="Number of Rough Sleepers in each Region of England (2010 - 2020)",
        x="Year", y = "Number of Rough Sleepers") + 
   scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200))
 
