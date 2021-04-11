@@ -1,12 +1,6 @@
 #Developing the project-----------------------------
 
-library(ggplot2)
-library(readxl)
-library(RColorBrewer)
-library(scales)
-library(dplyr)
-library(tidyr)
-library(tidyverse)
+
 
 #------------------------------------------------------------------------------
 #The first main showcase visualisation 
@@ -46,7 +40,9 @@ rs2plot
 ggsave("figures/rs2plot.png")
 
 #------------------------------------------------------------------------------
-#The supporting graph - a piechart
+#The supporting graph - 
+
+#piechart 1
 
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 
@@ -99,7 +95,52 @@ piechart<- bp + coord_polar("y", start=0) +
   theme_void() + # remove background, grid, numeric labels
   ggtitle("Proportion of rough sleepers by region in England in 2019")
 
-piechart
+piechart 
+
+#piechart2
+
+rawdata2<-read_excel("~/myfinalproject/processed/population.xlsx")
+
+
+rs4<- rawdata2 %>% slice(9, 23, 67, 92, 138, 173, 258, 329)
+rs4<- rs4 %>% select(2, 5)
+rs4<- rs4 %>% 
+  rename(
+    Region = ...2,
+   "2019" = ...5)
+
+view(rs4)
+
+rs4_long <- rs4 %>% 
+  gather(Year, Number, -Region)
+rs4_long$Number <- as.numeric(as.character(rs4_long$Number))
+
+rs4pie<- data.frame(rs4_long)
+
+view(rs4pie)
+
+# First you must generate a barplot of the data
+bp<- ggplot(rs4pie, aes(x="", y=Number, fill=Region))+
+  geom_bar(width = 1, stat = "identity") + 
+  ggtitle("help") +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid  = element_blank(),
+        legend.position="none",
+        line = element_blank()
+  ) + scale_fill_brewer(palette="Dark2")
+
+
+#Then plot the data into a piechart as below
+piechart2<- bp + coord_polar("y", start=0) + 
+  theme_void() + # remove background, grid, numeric labels
+  ggtitle("Population of each region in England in 2019")
+
+piechart2
+
+
+
 
 #------------------------------------------------------------------------------
 #other graph 
