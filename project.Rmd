@@ -12,6 +12,7 @@ library(scales)
 library(dplyr)
 library(tidyr)
 library(tidyverse)
+library(gridExtra)
 ```
 
 <span style="text-decoration:underline">Research Questions</span>
@@ -144,7 +145,7 @@ rs2plot #generates the plot
 ```
 
 
-Graph 2: Number of Rough Sleepers in England by Region (2019) 
+Graph 2: Number of Rough Sleepers in each Region in England (2019) 
 
 ```{r = graph2, message=FALSE, results='hide'}
 #assign prepared data as a dataframe to a variable
@@ -172,14 +173,11 @@ piechart<- bp + coord_polar("y", start=0) +
 ggsave("figures/piechart.png") 
 ```
 
-```{r, echo=FALSE}
-#generates the piechart
-piechart
-```
 
 Graph 3: Population of each Region in England (2019) 
 
-```{r = graph3, message=FALSE, results='hide'}
+```{r, message=FALSE, results='hide'}
+
 #assign prepared data as a dataframe to a variable
 rs4pie<- data.frame(rs4_long)
 
@@ -195,19 +193,20 @@ bp<- ggplot(rs4pie, aes(x="", y=Number, fill=Region))+
         line = element_blank()
   ) + scale_fill_brewer(palette="Dark2")
 
-
 #barplot is converted into a piechart
 piechart2<- bp + coord_polar("y", start=0) + 
   theme_void() + # remove background, grid, numeric labels
-  ggtitle("Population of each Region in England in 2019")
+  ggtitle("Population of each Region in England (2019")
 
 #saves the graph as an image in figs folder
 ggsave("figures/piechart2.png") 
 ```
 
-```{r, echo=FALSE, message=FALSE, results='hide'}
-#generates the piechart
-piechart2
+```{r, echo=FALSE, message=FALSE, results='hide', fig.show='hold', out.width="50%"}
+
+plot(piechart)
+plot(piechart2) 
+
 ```
 
 
