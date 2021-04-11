@@ -262,15 +262,9 @@ rs3$`2020`&lt;-NULL
 rs3_long &lt;- rs3 %&gt;% 
   gather(Year, Number, -Region)</code></pre>
 <p>And the third graph which is also a pie chart.</p>
-<pre class="r"><code>rawdata2&lt;-read_excel(&quot;~/myfinalproject/processed/population.xlsx&quot;)</code></pre>
-<pre><code>## New names:
-## * `` -&gt; ...2
-## * `` -&gt; ...3
-## * `` -&gt; ...4
-## * `` -&gt; ...5
-## * `` -&gt; ...6
-## * ...</code></pre>
-<pre class="r"><code>rs4&lt;- rawdata2 %&gt;% slice(9, 23, 67, 92, 138, 173, 258, 329)
+<pre class="r"><code>rawdata2&lt;-read_excel(&quot;~/myfinalproject/processed/population.xlsx&quot;)
+
+rs4&lt;- rawdata2 %&gt;% slice(9, 23, 67, 92, 138, 173, 258, 329)
 rs4&lt;- rs4 %&gt;% select(2, 5)
 rs4&lt;- rs4 %&gt;% 
   rename(
@@ -282,7 +276,7 @@ rs4_long &lt;- rs4 %&gt;%
 rs4_long$Number &lt;- as.numeric(as.character(rs4_long$Number))
 
 rs4pie&lt;- data.frame(rs4_long)</code></pre>
-<p><span style="text-decoration:underline">Visualisation</span></p>
+<p><span style="text-decoration:underline">Data Visualisation</span></p>
 <p>Graph 1: Number of Rough Sleepers in England by Region (2010 - 2020)</p>
 <pre class="r"><code>rs2plot &lt;-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Region)) +
   geom_point() +
