@@ -14,49 +14,56 @@ library(tidyr)
 library(tidyverse)
 ```
 
-<span style="text-decoration:underline">Data Origins</span>
-
 <span style="text-decoration:underline">Research Questions</span>
+
+These graphs present government survey data on the number of Rough Sleepers in England to consider the question; 
+
+       1) Has homelessness increased over the past decade? 
+
+       2) Is this increase observed equally across all regions of England? 
+
+<span style="text-decoration:underline">Data Origins</span>
 
 <span style="text-decoration:underline">Data Preparation</span>
 
-After having removed all sheets from the excel document except for the sheet that contained the total number of rough sleepers I began data preparation. To begin I imported the raw data. 
+After having removed all sheets from the excel document except for the sheet that contained the total number of rough sleepers I began data preparation. 
 
 ```{r}
+#importing the raw data
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 ```
 
-The raw data detailed the number of rough sleepers within England and included individual counts for each region of England and each Local Authority within the each region. 
+The raw data detailed the number of rough sleepers within England and individual counts for each region of England and each Local Authority within each region. 
 
-For my data visualisation I was interested in visualising the number of rough sleepers in all the regions of England across the last 10 years, as such I began by removing thewe rows from the original dataset (as shown below). 
+As I was visualising the number of rough sleepers in each region of England across the last 10 years, as such I selected these rows from the data set. 
 
 ```{r}
+#slice the data to select the rows required
 rs2<- rawdata %>% slice(1:11)
 ```
 
-Since I aimed to visualize the number of rough sleepers in each region individually within England I removed the rows containing summary counts for 'England', 'London' and the 'Rest of England'. 
+Since I aimed to visualize the number of rough sleepers in each region individually I removed the rows containing summary counts for 'England', 'London' and the 'Rest of England'. 
 
 ```{r}
+#columns removed from the data
 rs2<- rs2[-c(1:3), ]
 ```
 
-In addition to removing data associated with each Local Authority (which was not be part of the visualization) I also removed the columns that contained information relating to the ONS code associated with each region and Local Authority in England.
+Then, I removed data associated with each Local Authority, columns containing the ONS code of each Region and Local Authority. 
 
-```{r, echo=FALSE, message=FALSE, results='hide'}
+```{r}
 rs2$`Local authority ONS code`<-NULL
 rs2$`Local authority`<-NULL
 rs2$`Region ONS code`<- NULL
-
-rs2[1:12]
 ```
 
-Finally, I converted the data from a wide to a long format so that it would be in a preferred format for generating a graph with ggplot2.
+Finally, I tidyed the data and converted it into a long format so that it would be in a preferred format for use with ggplot2.
 
 ```{r}
+#convert to a 'long' data set
 rs2_long <- rs2 %>% 
   gather(Year, Number, -Region)
 ```
-
 
 The tibble below shows a short section of the output and exemplifies the 'long' (as opposed to a wide) format the data set had been converted to. 
 
@@ -64,11 +71,9 @@ The tibble below shows a short section of the output and exemplifies the 'long' 
 head(rs2_long, 16)
 ```
 
-I then performed the same steps to prepare the data for the second graph to be visualised; a pie chart of all the rough sleepers in 2020 in each region of England. 
+I then performed the same steps to prepare the data for the second graph to be visualised; a pie chart of rough sleepers in each region of England, in 2020. 
 
 ```{r}
-rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
-
 rs3<- rawdata %>% slice(1:11)
 
 rs3<- rs3[-c(1:3), ]
@@ -85,49 +90,48 @@ rs3$`2015`<- NULL
 rs3$`2016`<-NULL
 rs3$`2017`<-NULL
 rs3$`2018`<- NULL
-rs3$`2019`<-NULL
+rs3$`2020`<-NULL
 
 rs3_long <- rs3 %>% 
   gather(Year, Number, -Region)
-
-view(rs3)
 ```
 
 
 <span style="text-decoration:underline">Visualisation</span> 
 
-The Main Visualisation
+Graph 1: Number of Rough Sleepers in England by Region (2010 - 2020)
 
-```{r = maindiagram, echo=FALSE, message=FALSE, results='hide'}
+```{r = graph1, message=FALSE, results='hide'}
 rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Region)) +
   geom_point() +
   geom_line(position = position_dodge(0.4)) +
   scale_color_brewer(palette = 'Dark2') +
-  theme_classic(base_size = 12) + 
-  theme(axis.text.x = element_text(face= "bold", color="black", 
+    theme(axis.text.x = element_text(face= "bold", color="black", 
                                  size=7),
         axis.text.y = element_text(face= "bold", color="black", 
                                   size=7),
         axis.line = element_line(colour = "black", 
                     size = 1, linetype = "solid")) +
-  labs(title="Number of Rough Sleepers in each Region of England (2010 - 2020)",
+  labs(title="Number of Rough Sleepers in England by Region (2010 - 2020)",
        x="Year", y = "Number of Rough Sleepers") + 
   scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200))
-
-rs2plot
 
 ggsave("figures/rs2plot.png")
 ```
 
+```{r echo=FALSE, warning=FALSE}
+rs2plot
+```
 
-Supporting Visualisation
 
-```{r = diagram3,echo=FALSE, message=FALSE, results='hide'}
+Graph 2: Number of Rough Sleepers in England by Region (2019) 
+
+```{r = graph2, message=FALSE, results='hide'}
 rs3pie<- data.frame(rs3_long)
 
 bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
-  geom_text(aes(label = paste(round(Number / sum(Number) * 100, 1), "%"), x = 1.7),
+  geom_text(aes(label = paste(round(Number)," "), x = 1.7),
             position = position_stack(vjust = 0.5)) +
   ggtitle("help") +
   theme(axis.text = element_blank(),
@@ -140,16 +144,18 @@ bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
 
 piechart<- bp + coord_polar("y", start=0) + 
     theme_void() +
-    ggtitle("Proportion of rough sleepers by Region in England (2020), N = 1974")
-
-piechart
+    ggtitle("Proportion of Rough sleepers by Population in each Region of England (2019)")
 
 ggsave("figures/piechart.png")
 ```
 
+```{r, echo=FALSE}
+piechart
+```
 
 <span style="text-decoration:underline">Summary</span>
 
+The above graphs show that the number of rough sleepers in England has increased overall, across all regions between 2010 - 2020. 
 
 <span style="text-decoration:underline">Future Directions</span>
 

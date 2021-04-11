@@ -30,7 +30,16 @@ rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Reg
   geom_point() +
   geom_line(position = position_dodge(0.4)) +
   scale_color_brewer(palette = 'Dark2') +
-  theme_classic(base_size = 12)
+  theme_classic(base_size = 12) + 
+  theme(axis.text.x = element_text(face= "bold", color="black", 
+                                   size=7),
+        axis.text.y = element_text(face= "bold", color="black", 
+                                   size=7),
+        axis.line = element_line(colour = "black", 
+                                 size = 1, linetype = "solid")) +
+  labs(title="Number of Rough Sleepers in each Region of England (2010 - 2020)",
+       x="Year", y = "Number of Rough Sleepers") + 
+  scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200))
 
 rs2plot
 
@@ -57,7 +66,7 @@ rs3$`2015`<- NULL
 rs3$`2016`<-NULL
 rs3$`2017`<-NULL
 rs3$`2018`<- NULL
-rs3$`2019`<-NULL
+rs3$`2020`<-NULL
 
 view(rs3)
 
@@ -73,7 +82,7 @@ view(rs3pie)
 # First you must generate a barplot of the data
 bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
-  geom_text(aes(label = paste(round(Number / sum(Number) * 100, 1), "%"), x = 1.7),
+  geom_text(aes(label = paste(round(Number), ""), x = 1.7),
             position = position_stack(vjust = 0.5)) +
   ggtitle("help") +
   theme(axis.text = element_blank(),
@@ -88,7 +97,7 @@ bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
 #Then plot the data into a piechart as below
 piechart<- bp + coord_polar("y", start=0) + 
   theme_void() + # remove background, grid, numeric labels
-  ggtitle("Proportion of rough sleepers by region in England in 2020")
+  ggtitle("Proportion of rough sleepers by region in England in 2019")
 
 piechart
 
@@ -146,7 +155,6 @@ rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number,
         
 
 rs2plot
-breaks= c("0", "300","600","900","1200")
 
 #Look at the data wrangling recording at how to manipulate the data
 
