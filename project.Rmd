@@ -98,7 +98,7 @@ rs3_long <- rs3 %>%
 
 And the third graph which is also a pie chart. 
 
-```{r}
+```{r, message=FALSE, results='hide'}
 rawdata2<-read_excel("~/myfinalproject/processed/population.xlsx")
 
 rs4<- rawdata2 %>% slice(9, 23, 67, 92, 138, 173, 258, 329)
@@ -115,7 +115,7 @@ rs4_long$Number <- as.numeric(as.character(rs4_long$Number))
 rs4pie<- data.frame(rs4_long)
 ```
 
-<span style="text-decoration:underline">Visualisation</span> 
+<span style="text-decoration:underline">Data Visualisation</span> 
 
 Graph 1: Number of Rough Sleepers in England by Region (2010 - 2020)
 
