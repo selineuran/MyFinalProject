@@ -16,7 +16,7 @@ library(tidyverse)
 
 <span style="text-decoration:underline">Research Questions</span>
 
-These graphs present government survey data on the number of Rough Sleepers in England to consider the question; 
+These graphs present government survey data on the number of rough sleepers in England to consider the question; 
 
        1) Has homelessness increased over the past decade? 
 
@@ -35,29 +35,22 @@ rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 
 The raw data detailed the number of rough sleepers within England and individual counts for each region of England and each Local Authority within each region. 
 
-As I was visualising the number of rough sleepers in each region of England across the last 10 years, as such I selected these rows from the data set. 
+My aim was to visualise the number of rough sleepers in each region of England across the last 10 years. I selected these rows from the data set. Since I aimed to visualize the number of rough sleepers in each region individually I removed the rows containing summary counts for 'England', 'London' and the 'Rest of England'. Then, I removed data associated with each Local Authority, columns containing the ONS code of each Region and Local Authority. 
 
 ```{r}
 #slice the data to select the rows required
 rs2<- rawdata %>% slice(1:11)
-```
 
-Since I aimed to visualize the number of rough sleepers in each region individually I removed the rows containing summary counts for 'England', 'London' and the 'Rest of England'. 
-
-```{r}
-#columns removed from the data
+#columns and rows removed from the data
 rs2<- rs2[-c(1:3), ]
-```
 
-Then, I removed data associated with each Local Authority, columns containing the ONS code of each Region and Local Authority. 
-
-```{r}
+#further rows removed from the data
 rs2$`Local authority ONS code`<-NULL
 rs2$`Local authority`<-NULL
 rs2$`Region ONS code`<- NULL
 ```
 
-Finally, I tidyed the data and converted it into a long format so that it would be in a preferred format for use with ggplot2.
+Finally, I converted the data it into a 'long' format for use with ggplot2.
 
 ```{r}
 #convert to a 'long' data set
@@ -65,19 +58,25 @@ rs2_long <- rs2 %>%
   gather(Year, Number, -Region)
 ```
 
-The tibble below shows a short section of the output and exemplifies the 'long' (as opposed to a wide) format the data set had been converted to. 
+The tibble below shows a short section of the data. 
 
 ```{r}
+#shows the first 16 rows of the dataframe
 head(rs2_long, 16)
 ```
 
-I then performed the same steps to prepare the data for the second graph to be visualised; a pie chart of rough sleepers in each region of England, in 2019. 
+I then performed the same steps to prepare the data for the second and third graph to be visualised; a pie chart of both the population in each Region of England and the number of rough sleepers in each Region of England, in 2019. 
 
-```{r}
+```{r, message=FALSE, results='hide'}
+#the first pie chart - NUmber of rough sleepers by Region in England
+
+#import the data
 rs3<- rawdata %>% slice(1:11)
 
+#select the columns of interest
 rs3<- rs3[-c(1:3), ]
 
+#remove the unwanted rows
 rs3$`Local authority ONS code`<-NULL
 rs3$`Local authority`<-NULL
 rs3$`Region ONS code`<- NULL
@@ -92,27 +91,29 @@ rs3$`2017`<-NULL
 rs3$`2018`<- NULL
 rs3$`2020`<-NULL
 
+#convert to a 'long' format
 rs3_long <- rs3 %>% 
   gather(Year, Number, -Region)
-```
 
-And the third graph which is also a pie chart. 
+#the second piechart - population by Region in England
 
-```{r, message=FALSE, results='hide'}
+#import the data
 rawdata2<-read_excel("~/myfinalproject/processed/population.xlsx")
 
+#select the rows and columns of interest
 rs4<- rawdata2 %>% slice(9, 23, 67, 92, 138, 173, 258, 329)
 rs4<- rs4 %>% select(2, 5)
+
+#columns were then renamed
 rs4<- rs4 %>% 
   rename(
     Region = ...2,
    "2019" = ...5)
 
+#convert the data to 'long' format
 rs4_long <- rs4 %>% 
   gather(Year, Number, -Region)
 rs4_long$Number <- as.numeric(as.character(rs4_long$Number))
-
-rs4pie<- data.frame(rs4_long)
 ```
 
 <span style="text-decoration:underline">Data Visualisation</span> 
@@ -120,33 +121,36 @@ rs4pie<- data.frame(rs4_long)
 Graph 1: Number of Rough Sleepers in England by Region (2010 - 2020)
 
 ```{r = graph1, message=FALSE, results='hide'}
+#generates a line graph with several additional features
 rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Region)) +
   geom_point() +
-  geom_line(position = position_dodge(0.4)) +
-  scale_color_brewer(palette = 'Dark2') +
-    theme(axis.text.x = element_text(face= "bold", color="black", 
+  geom_line(position = position_dodge(0.4)) + #clustered data points are distributed
+  scale_color_brewer(palette = 'Dark2') + #a colour scheme is added
+  theme(axis.text.x = element_text(face= "bold", color="black", 
                                  size=7),
         axis.text.y = element_text(face= "bold", color="black", 
                                   size=7),
         axis.line = element_line(colour = "black", 
-                    size = 1, linetype = "solid")) +
+                    size = 1, linetype = "solid")) + #aesthetic of the x/y axis
   labs(title="Number of Rough Sleepers in England by Region (2010 - 2020)",
-       x="Year", y = "Number of Rough Sleepers") + 
-  scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200))
+       x="Year", y = "Number of Rough Sleepers") + #labels the x/y axis and title for plot
+  scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200)) #adjust the scale
 
-ggsave("figures/rs2plot.png")
+ggsave("figures/rs2plot.png") #saves the graph as an image in figs folder
 ```
 
 ```{r echo=FALSE, warning=FALSE}
-rs2plot
+rs2plot #generates the plot
 ```
 
 
 Graph 2: Number of Rough Sleepers in England by Region (2019) 
 
 ```{r = graph2, message=FALSE, results='hide'}
+#assign prepared data as a dataframe to a variable
 rs3pie<- data.frame(rs3_long)
 
+#create a barplot of the data
 bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
   ggtitle("help") +
@@ -155,23 +159,31 @@ bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
         axis.ticks = element_blank(),
         panel.grid  = element_blank(),
         legend.position="none",
-        line = element_blank()
-  ) + scale_fill_brewer(palette="Dark2")
+        line = element_blank() #template theme is added
+  ) + scale_fill_brewer(palette="Dark2") #colour scheme is added matching plot above
 
+
+#barplot is converted into a piechart
 piechart<- bp + coord_polar("y", start=0) + 
     theme_void() +
-    ggtitle("Proportion of Rough sleepers by Population in each Region of England (2019)")
+    ggtitle("Number of Rough Sleepers in each Region of England (2019)")
 
-ggsave("figures/piechart.png")
+#saves the graph as an image in figs folder
+ggsave("figures/piechart.png") 
 ```
 
 ```{r, echo=FALSE}
+#generates the piechart
 piechart
 ```
 
 Graph 3: Population of each Region in England (2019) 
 
 ```{r = graph3, message=FALSE, results='hide'}
+#assign prepared data as a dataframe to a variable
+rs4pie<- data.frame(rs4_long)
+
+#create a barplot of the data
 bp<- ggplot(rs4pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
   ggtitle("help") +
@@ -183,14 +195,18 @@ bp<- ggplot(rs4pie, aes(x="", y=Number, fill=Region))+
         line = element_blank()
   ) + scale_fill_brewer(palette="Dark2")
 
+
+#barplot is converted into a piechart
 piechart2<- bp + coord_polar("y", start=0) + 
   theme_void() + # remove background, grid, numeric labels
-  ggtitle("Population of each region in England in 2019")
+  ggtitle("Population of each Region in England in 2019")
 
-ggsave("figures/piechart.png")
+#saves the graph as an image in figs folder
+ggsave("figures/piechart2.png") 
 ```
 
 ```{r, echo=FALSE, message=FALSE, results='hide'}
+#generates the piechart
 piechart2
 ```
 
