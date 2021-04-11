@@ -21,9 +21,11 @@ These graphs present government survey data on the number of rough sleepers in E
 
        1) Has homelessness increased over the past decade? 
 
-       2) Is this increase observed equally across all regions of England? 
+       2) Is homelessness observed equally across all regions of England? 
 
 <span style="text-decoration:underline">Data Origins</span>
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 <span style="text-decoration:underline">Data Preparation</span>
 
@@ -154,18 +156,20 @@ rs3pie<- data.frame(rs3_long)
 #create a barplot of the data
 bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
+  geom_text(aes(label = paste(round(Number / sum(Number) * 100, 1), "%"), x = 1.7), 
+            position = position_stack(vjust = 0.5)) +
   ggtitle("help") +
   theme(axis.text = element_blank(),
         axis.title = element_blank(),
         axis.ticks = element_blank(),
         panel.grid  = element_blank(),
         legend.position="none",
-        line = element_blank() #template theme is added
-  ) + scale_fill_brewer(palette="Dark2") #colour scheme is added matching plot above
+        line = element_blank()) + #template theme is added
+  scale_fill_brewer(palette="Dark2") #colour scheme is added matching plot above
 
 
 #barplot is converted into a piechart
-piechart<- bp + coord_polar("y", start=0) + 
+piechart<- bp + coord_polar(theta = "y", start=0) +
     theme_void() +
     ggtitle("Number of Rough Sleepers in each Region of England (2019)")
 
@@ -184,6 +188,8 @@ rs4pie<- data.frame(rs4_long)
 #create a barplot of the data
 bp<- ggplot(rs4pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
+  geom_text(aes(label = paste(round(Number / sum(Number) * 100, 1), "%"), x = 1.7), 
+            position = position_stack(vjust = 0.5)) +
   ggtitle("help") +
   theme(axis.text = element_blank(),
         axis.title = element_blank(),
@@ -196,7 +202,7 @@ bp<- ggplot(rs4pie, aes(x="", y=Number, fill=Region))+
 #barplot is converted into a piechart
 piechart2<- bp + coord_polar("y", start=0) + 
   theme_void() + # remove background, grid, numeric labels
-  ggtitle("Population of each Region in England (2019")
+  ggtitle("Population of each Region in England (2019)")
 
 #saves the graph as an image in figs folder
 ggsave("figures/piechart2.png") 
@@ -209,11 +215,10 @@ plot(piechart2)
 
 ```
 
+<span style="text-decoration:underline">Conclusion</span>
 
-<span style="text-decoration:underline">Summary</span>
 
-The above graphs show that the number of rough sleepers in England has increased overall, across all regions between 2010 - 2020. 
+<span style="text-decoration:underline">Conclusion</span>
 
-<span style="text-decoration:underline">Future Directions</span>
-
+The main visualisation show that the number of rough sleepers in England has increased across all Regions between 2010 - 2020. The pie charts indicate that the number of Rough Sleepers in each Region of England is proportional to the population of the Region. However a future recommendation might be to visualise the Number of Rough Sleepers proportional to population within the same chart. In this way a reliable comparison of the proportional number of Rough Sleepers in each Region could be performed. 
 
