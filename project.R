@@ -1,5 +1,12 @@
 #Developing the project-----------------------------
-
+library(ggplot2)
+library(readxl)
+library(RColorBrewer)
+library(scales)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(gridExtra)
 
 
 #------------------------------------------------------------------------------
@@ -40,14 +47,12 @@ rs2plot
 ggsave("figures/rs2plot.png")
 
 #------------------------------------------------------------------------------
-#The supporting graph - 
-
+#The supporting graphs - 
 #piechart 1
 
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 
 #First the data preparation...
-
 rs3<- rawdata %>% slice(1:11)
 rs3<- rs3[-c(1:3), ]
 rs3$`Local authority ONS code`<-NULL
@@ -71,57 +76,72 @@ rs3_long <- rs3 %>%
 
 view(rs3_long)
 
-rs3pie<- data.frame(rs3_long)
+#assign prepared data as a dataframe to a variable
+rs2pie<- data.frame(rs2_long)
 
-view(rs3pie)
-
-# First you must generate a barplot of the data
-bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
+#create a barplot of the data
+bp<- ggplot(rs2pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
-  geom_text(aes(label = paste(round(Number), ""), x = 1.7),
+  geom_text(aes(label = paste(round(Number / sum(Number) * 100, 1), "%"), x = 1.7), 
             position = position_stack(vjust = 0.5)) +
   ggtitle("help") +
   theme(axis.text = element_blank(),
-           axis.title = element_blank(),
-           axis.ticks = element_blank(),
-           panel.grid  = element_blank(),
-           legend.position="none",
-           line = element_blank()
-) + scale_fill_brewer(palette="Dark2")
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid  = element_blank(),
+        legend.position="none",
+        line = element_blank()) + #template theme is added
+  scale_fill_brewer(palette="Dark2") #colour scheme is added matching plot above
 
 
-#Then plot the data into a piechart as below
-piechart<- bp + coord_polar("y", start=0) + 
-  theme_void() + # remove background, grid, numeric labels
-  ggtitle("Proportion of rough sleepers by region in England in 2019")
+#barplot is converted into a piechart
+piechart<- bp + coord_polar(theta = "y", start=0) +
+  theme_void() +
+  ggtitle("Number of Rough Sleepers in each Region of England (2019)")
 
-piechart 
+#saves the graph as an image in figs folder
+ggsave("figures/piechart.png") 
 
+#------------------------------------
 #piechart2
 
 rawdata2<-read_excel("~/myfinalproject/processed/population.xlsx")
+#the rows and columns of interest are selected
+rs3<- rawdata2 %>% slice(9, 23, 67, 92, 138, 173, 258, 329)
+rs3<- rs3 %>% select(2, 5)
 
-
-rs4<- rawdata2 %>% slice(9, 23, 67, 92, 138, 173, 258, 329)
-rs4<- rs4 %>% select(2, 5)
-rs4<- rs4 %>% 
+#colums are renamed appropriately
+rs3<- rs3 %>% 
   rename(
     Region = ...2,
-   "2019" = ...5)
-
-view(rs4)
-
-rs4_long <- rs4 %>% 
+    "2019" = ...5)
+#convert the data to 'long' format
+rs3_long <- rs3 %>% 
   gather(Year, Number, -Region)
-rs4_long$Number <- as.numeric(as.character(rs4_long$Number))
 
-rs4pie<- data.frame(rs4_long)
+#the Number column is converted to a numeric variable
+rs3_long$Number <- as.numeric(as.character(rs3_long$Number))
 
-view(rs4pie)
+#dataset containing population of each region is reordered to match the other data set
+rs3_long<- rs3_long %>% arrange(Region)
 
-# First you must generate a barplot of the data
-bp<- ggplot(rs4pie, aes(x="", y=Number, fill=Region))+
+#column of interest is then selected
+rs3_long<- rs3_long %>% select(3)
+
+#the column in renamed to an appropriate name
+rs3_long<- rs3_long %>%
+  rename(Population = Number)
+
+rs3pie<- data.frame(rs3_long)
+
+#assign prepared data as a dataframe to a variable
+rs3pie<- data.frame(rs3_long)
+
+#create a barplot of the data
+bp<- ggplot(rs3pie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
+  geom_text(aes(label = paste(round(Number / sum(Number) * 100, 1), "%"), x = 1.7), 
+            position = position_stack(vjust = 0.5)) +
   ggtitle("help") +
   theme(axis.text = element_blank(),
         axis.title = element_blank(),
@@ -131,39 +151,13 @@ bp<- ggplot(rs4pie, aes(x="", y=Number, fill=Region))+
         line = element_blank()
   ) + scale_fill_brewer(palette="Dark2")
 
-
-#Then plot the data into a piechart as below
+#barplot is converted into a piechart
 piechart2<- bp + coord_polar("y", start=0) + 
   theme_void() + # remove background, grid, numeric labels
-  ggtitle("Population of each region in England in 2019")
+  ggtitle("Population of each Region in England (2019)")
 
-piechart2
-
-
-#------------------------------------------------------------------------------
-#other graph 
-
-rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
-View(rawdata)
-
-rs1<- rawdata %>% slice(1:2)
-
-rs1$`Local authority ONS code`<-NULL
-rs1$`Region ONS code`<-NULL
-rs1$`Local authority`<-NULL
-
-rs1_long <- rs1 %>% 
-  gather(Year, Number, -Region)
-rs1_long
-
-rs1plot <- ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Region)) +
-  geom_point() +
-  geom_line() +
-  scale_color_brewer(palette = 'Dark2') +
-  theme_classic(base_size = 12)
-
-rs1plot
-ggsave("figures/rs1plot.png")
+#saves the graph as an image in figs folder
+ggsave("figures/piechart2.png") 
 
 
 #To do list for the project----------------------------------------------------
@@ -192,7 +186,6 @@ rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number,
        x="Number of Rough Sleepers", y = "Year") + 
   scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200))
         
-
 rs2plot
 
 #Look at the data wrangling recording at how to manipulate the data
@@ -305,5 +298,40 @@ pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
                 label = percent(Number/100)), size=0)
 pie
 
+#Add piechart of rough sleepers as a percentge of region population
+view(rs3_long)
+view(rs4_long)
+
+rs4_l<- rs4_long %>% select(3)
+rs4_l<- rs4_l %>%
+  rename(Population = Number)
+
+total<- cbind(rs3_long, rs4_l)
+total <- transform(total, percentage = Number / Population)
+total <- total %>% select(1,2,5)
+
+rs3pie<- data.frame(total)
+
+bp<- ggplot(rs3pie, aes(x="", y=percentage, fill=Region))+
+  geom_bar(width = 1, stat = "identity") + 
+  geom_text(aes(label = paste(round(percentage / sum(percentage) * 100, 1), "%"), x = 1.7), 
+            position = position_stack(vjust = 0.5)) +
+  ggtitle("help") +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid  = element_blank(),
+        legend.position="none",
+        line = element_blank()) + #template theme is added
+  scale_fill_brewer(palette="Dark2") #colour scheme is added matching plot above
+
+
+#barplot is converted into a piechart
+piechart<- bp + coord_polar(theta = "y", start=0) +
+  theme_void() +
+  ggtitle("Rough Sleepers as a proportion of the Region
+          population (2019)")
+
+piechart
 
 #Add London to the visualisations
