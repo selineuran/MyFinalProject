@@ -215,10 +215,8 @@ plot(piechart2)
 
 ```
 
-<span style="text-decoration:underline">Conclusion</span>
-
 
 <span style="text-decoration:underline">Conclusion</span>
 
-The main visualisation show that the number of rough sleepers in England has increased across all Regions between 2010 - 2020. The pie charts indicate that the number of Rough Sleepers in each Region of England is proportional to the population of the Region. However a future recommendation might be to visualise the Number of Rough Sleepers proportional to population within the same chart. In this way a reliable comparison of the proportional number of Rough Sleepers in each Region could be performed. 
+The main visualisation show that the number of rough sleepers in England appears to have increased within all regions in England from 2010 to 2020. In addition, the pie charts seem to indicate that there is an equal prevalence of the number of Rough Sleepers across all regions of England, when taking into account the population of each region. 
 

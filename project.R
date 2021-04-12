@@ -306,5 +306,4 @@ pie<- pie + scale_fill_brewer(palette="Dark2") + blank_theme +
 pie
 
 
-
-#
+#Add London to the visualisations
