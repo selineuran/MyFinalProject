@@ -17,11 +17,11 @@ library(gridExtra)
 
 <span style="text-decoration:underline">Research Questions</span>
 
-These graphs present government survey data on the number of rough sleepers in England to consider the question; 
+These graphs present government survey data on the number of rough sleepers in England to consider the following question; 
 
-       1) Has homelessness increased over the past decade? 
+       1) Has the numer of rough sleepers in England increased over the past decade? 
 
-       2) Is homelessness observed equally across all regions of England? 
+       2) Is the numer of sleepers observed equally across England in one year? 
 
 <span style="text-decoration:underline">Data Origins</span>
 
@@ -191,13 +191,13 @@ bp<- ggplot(rspie, aes(x="", y=Percentage, fill=Region))+
 #barplot is converted into a piechart
 rspiechart <- bp + coord_polar(theta = "y", start=0) +
   theme_void() +
-  ggtitle("Rough sleepers as a proportion of region
-          population (2019)")
+  ggtitle("Rough sleepers by region as a proportion of population (2019)")
 
 #saves the graph as an image in figs folder
 ggsave("figures/rspiechart.png")
+```
 
-
+```{r echo=FALSE, warning=FALSE}
 #generates the pie chart
 rspiechart
 ```
