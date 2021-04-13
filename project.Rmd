@@ -1,5 +1,5 @@
 ---
-title: "My Data Visualisation Project"
+title: "Data Visualisation Project"
 author: "Seline Uran"
 output: html_document
 ---
