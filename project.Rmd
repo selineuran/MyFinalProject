@@ -68,7 +68,7 @@ The tibble below shows a short section of the data.
 head(rs1_long, 16)
 ```
 
-I then performed the same steps to prepare the data for the second visualisation; a pie chart of the number of rough sleepers in each region proportional to population, in 2019. 
+I then prepared the data for the second visualisation; a pie chart of the number of rough sleepers in each region proportional to population, in 2019. 
 
 ```{r, message=FALSE}
 #import the dataset relating to number of rough sleepers
