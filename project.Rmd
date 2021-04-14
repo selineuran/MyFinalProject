@@ -111,7 +111,7 @@ rs3_long<- rs3_long %>% select(3)
 rs3_long<- rs3_long %>%
     rename(Population = Number)
 
-#then a new dataset is generated so the number of RS in each region proportional to population can be generated int the pie chart
+#then a new dataset is generated so the number of RS in each region proportional to population can be generated in the pie chart
 #the two datasets are combined into a new table
 newtable<- cbind(rs2_long, rs3_long)
 newtable <- transform(newtable, #calculates % of the RS withi the region population
@@ -120,7 +120,7 @@ newtable <- transform(newtable, #calculates % of the RS withi the region populat
 #select the columns to be used for the pie chart visualisation
 newtable <- newtable %>% select(1,2,5)
 
-#first six lines of the new data set generated
+#first six lines of the new data set
 head(newtable)
 ```
 
