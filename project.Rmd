@@ -182,7 +182,7 @@ bp<- ggplot(rspie, aes(x="", y=Percentage, fill=Region))+
 #barplot is converted into a piechart
 rspiechart <- bp + coord_polar(theta = "y", start=0) +
   theme_void() +
-  ggtitle("Percentage of Rough Sleepers in England by Region proportional to population (2019)")
+  ggtitle("Proportion of Rough Sleepers in England by Region (2019)")
 
 #saves the graph as an image in figs folder
 ggsave("figures/rspiechart.png")
@@ -195,4 +195,4 @@ rspiechart
 
 <span style="text-decoration:underline">Summary</span>
 
-The main visualisation show that the number of rough sleepers in England appears to have increased within all regions in England from 2010 to 2020. The supporting visualisation indicates that the largest of rough sleepers in England appear to be in London, and the South of England when taking into account the population as well as number of rough sleepers in each region. 
+The main visualisation show that the number of rough sleepers in England appears to have increased within all regions in England from 2010 to 2020. The supporting visualisation indicates that the largest proprtion of rough sleepers in England appear to be in London, and the South of England when taking into account the population of each region. 
