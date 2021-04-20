@@ -13,15 +13,16 @@ library(dplyr)
 library(tidyr)
 library(tidyverse)
 library(gridExtra)
+library(RColorBrewer)
 ```
 
 <span style="text-decoration:underline">Research Questions</span>
 
-These graphs present government survey data on the number of rough sleepers in England to consider the following question; 
+These graphs present government survey data on the number of rough sleepers in England to consider the following questions; 
 
-       1) Has the numer of rough sleepers in England increased over the past decade? 
+Has the numer of rough sleepers in England increased over the past decade? 
 
-       2) Is the numer of sleepers observed equally across England in one year? 
+Is the numer of sleepers observed equally across England in one year? 
 
 <span style="text-decoration:underline">Data Origins</span>
 
@@ -41,16 +42,11 @@ The raw data detailed the number of rough sleepers within England and individual
 My aim was to visualise the number of rough sleepers in each region of England across the last 10 years. I selected these rows from the data set. Since I aimed to visualize the number of rough sleepers in each region individually I removed the rows containing summary counts for 'England', 'London' and the 'Rest of England'. Then, I removed data associated with each Local Authority, columns containing the ONS code of each Region and Local Authority. 
 
 ```{r}
-#slice the data to select the rows required
-rs1<- rawdata %>% slice(1:11)
+#select the columns required
+rs1<- rawdata %>% select(3, 5:15)
 
-#columns and rows removed from the data
-rs1<- rs1[-c(1:3), ]
-
-#further rows removed from the data
-rs1$`Local authority ONS code`<-NULL
-rs1$`Local authority`<-NULL
-rs1$`Region ONS code`<- NULL
+#select the rows required
+rs1<- rs1 %>% slice(2, 4:11)
 ```
 
 Finally, I converted the data it into a 'long' format for use with ggplot2.
@@ -68,7 +64,7 @@ The tibble below shows a short section of the data.
 head(rs1_long, 16)
 ```
 
-I then prepared the data for the second visualisation; a pie chart of the number of rough sleepers in each region proportional to population, in 2019. 
+I then prepared the data for the second visualisation; a pie chart of the number of rough sleepers in each region proportional to population, in 2019. This required importing a further data set that contained government data on the population of each region in England. This could be used to calculate a proprtoional value of rough sleepers.  
 
 ```{r, message=FALSE}
 #import the dataset relating to number of rough sleepers for each region
@@ -78,7 +74,7 @@ rawdata2<-read_excel("~/myfinalproject/processed/population.xlsx")
 
 #for the first data set pertaining to the number of rough sleepers
 #select rows of interest
-rs2<- rawdata %>% slice(4:11)
+rs2<- rawdata %>% slice(2, 4:11)
 #select the columns of interest
 rs2<- rs2 %>% select (3, 14)
 
@@ -88,7 +84,7 @@ rs2_long <- rs2 %>%
 
 #for the data set containing the population for each region
 #the rows and columns of interest are selected
-rs3<- rawdata2 %>% slice(9, 23, 67, 92, 138, 173, 258, 329)
+rs3<- rawdata2 %>% slice(9, 23, 67, 92, 138, 173, 224, 258, 329)
 rs3<- rs3 %>% select(2, 5)
 
 #columns are renamed appropriately
@@ -129,11 +125,15 @@ head(newtable)
 Graph 1: Number of Rough Sleepers in England by Region (2010 - 2020)
 
 ```{r = graph1, message=FALSE, results='hide'}
+#generate a colour palette with more than 8 colours by extending ggplot palette
+nb.cols <- 9
+mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nb.cols) 
+  
 #generates a line graph with several additional features
 rs1plot <-ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Region)) +
   geom_point() +
   geom_line(position = position_dodge(0.4)) + #clustered data points are distributed
-  scale_color_brewer(palette = 'Dark2') + #a colour scheme is added
+  scale_fill_manual(values = mycolors) + #a colour scheme is added
   theme(axis.text.x = element_text(face= "bold", color="black", 
                                  size=7),
         axis.text.y = element_text(face= "bold", color="black", 
@@ -142,7 +142,7 @@ rs1plot <-ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Reg
                     size = 1, linetype = "solid")) + #aesthetic of the x/y axis
   labs(title="Number of Rough Sleepers in England by Region (2010 - 2020)",
        x="Year", y = "Number of Rough Sleepers") + #labels the x/y axis and title for plot
-  scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200)) #adjust the scale
+  scale_y_continuous(breaks=c(0, 300, 600, 900, 1200, 1400), limits=c(0, 1400)) #adjust the scale
 
 ggsave("figures/rs1plot.png") #saves the graph as an image in figs folder
 ```
@@ -150,8 +150,6 @@ ggsave("figures/rs1plot.png") #saves the graph as an image in figs folder
 ```{r echo=FALSE, warning=FALSE}
 rs1plot #generates the plot
 ```
-
-Discussion
 
 Graph 2: Number of Rough Sleepers by Region proportional to population (2019) 
 
@@ -161,6 +159,10 @@ view(newtable)
 
 #generate a dataframe of the data
 rspie<- data.frame(newtable)
+
+#generate a colour palette with more than 8 colours by extending ggplot palette
+nb.cols <- 9 
+mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nb.cols) 
 
 #simple barplot is generated of the dataframe first
 bp<- ggplot(rspie, aes(x="", y=Percentage, fill=Region))+
@@ -174,13 +176,13 @@ bp<- ggplot(rspie, aes(x="", y=Percentage, fill=Region))+
         panel.grid  = element_blank(),
         legend.position="none",
         line = element_blank()) + #blank template theme is added
-  scale_fill_brewer(palette="Dark2") #colour scheme is added matching plot above
+  scale_fill_manual(values = mycolors) #colour scheme is added matching plot above
 
 
 #barplot is converted into a piechart
 rspiechart <- bp + coord_polar(theta = "y", start=0) +
   theme_void() +
-  ggtitle("Rough Sleepers by Region as a proportion of population (2019)")
+  ggtitle("Rough Sleepers in each region proportional to population (2019)")
 
 #saves the graph as an image in figs folder
 ggsave("figures/rspiechart.png")
@@ -191,8 +193,6 @@ ggsave("figures/rspiechart.png")
 rspiechart
 ```
 
-Discussion
-
 <span style="text-decoration:underline">Summary</span>
 
-The main visualisation show that the number of rough sleepers in England appears to have increased within all regions in England from 2010 to 2020. The pie charts seem to indicate that there is the largest proportion of rough sleepers in England within the South East, South West and the East of England when calculating the numer of rough sleepers proportional to the population of that region. 
+The main visualisation show that the number of rough sleepers in England appears to have increased within all regions in England from 2010 to 2020. The supporting visualisation indicates that the largest of rough sleepers in England appear to be in London, and the South of England when taking into account the population as well as number of rough sleepers in each region. 

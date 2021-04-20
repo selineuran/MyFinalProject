@@ -7,6 +7,7 @@ library(dplyr)
 library(tidyr)
 library(tidyverse)
 library(gridExtra)
+library(RColorBrewer)
 
 
 #------------------------------------------------------------------------------
@@ -15,22 +16,20 @@ library(gridExtra)
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 View(rawdata)
 
-rs2<- rawdata %>% slice(1:11)
-
-rs2$`Local authority ONS code`<-NULL
-rs2$`Local authority`<-NULL
-rs2$`Region ONS code`<- NULL
-
-rs2<- rs2[-c(1:3), ]
+rs2<- rawdata %>% select(3, 5:15)
+rs2<- rs2 %>% slice(2, 4:11)
 
 rs2_long <- rs2 %>% 
   gather(Year, Number, -Region)
 rs2_long
 
+nb.cols <- 9
+mycolors <- colorRampPalette(brewer.pal(8, "Dark2"))(nb.cols)
+
 rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Region)) +
   geom_point() +
   geom_line(position = position_dodge(0.4)) +
-  scale_color_brewer(palette = 'Dark2') +
+  scale_fill_manual(values = mycolors) +
   theme_classic(base_size = 12) + 
   theme(axis.text.x = element_text(face= "bold", color="black", 
                                    size=7),
@@ -40,7 +39,7 @@ rs2plot <-ggplot(rs2_long, aes(x = Year, y = Number, color = Region, group = Reg
                                  size = 1, linetype = "solid")) +
   labs(title="Number of Rough Sleepers in each Region of England (2010 - 2020)",
        x="Year", y = "Number of Rough Sleepers") + 
-  scale_y_continuous(breaks=c(0, 300, 600, 900, 1200), limits=c(0, 1200))
+  scale_y_continuous(breaks=c(0, 300, 600, 900, 1200, 1400), limits=c(0, 1400))
 
 rs2plot
 
