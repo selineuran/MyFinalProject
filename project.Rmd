@@ -151,7 +151,7 @@ ggsave("figures/rs1plot.png") #saves the graph as an image in figs folder
 rs1plot #generates the plot
 ```
 
-Graph 2: Number of Rough Sleepers by Region proportional to population (2019) 
+Graph 2: Proportion of Rough Sleepers in England by Region (2019) 
 
 ``` {r = second visualisation, message=FALSE, results='hide'}
 #look at the data prepared previously
