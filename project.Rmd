@@ -20,13 +20,13 @@ library(RColorBrewer)
 
 These graphs present government survey data on the number of rough sleepers in England to consider the following questions; 
 
-Has the numer of rough sleepers in England increased over the past decade? 
+Has the number of rough sleepers in England increased over the past decade? 
 
-Is the numer of sleepers observed equally across England in one year? 
+Is the number of sleepers observed equally across England in one year? 
 
 <span style="text-decoration:underline">Data Origins</span>
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+The raw data, the number of rough sleepers in England from 2010 - 2020, was retrieved from https://www.gov.uk/government/statistics/rough-sleeping-snapshot-in-england-autumn-2020. This data is gathered by individuals in each local authority conducting either (1) a counts-based estimate (counting visible rough sleepers), (2) an evidence-based estimate that involves meeting with local community partners or (3) an evidence-based estimate that performs counts in a specific area. The measure is carried out on a single night between October 1st and November 30th each year. These measures do not provide an index of homelessness but represents an estimate of individuals sleeping rough (therefore do not include individuals who are 'sofa surfing', in temporary accommodation or in a homeless shelter/hostel) on a single night.
 
 <span style="text-decoration:underline">Data Preparation</span>
 
@@ -39,7 +39,7 @@ rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
 
 The raw data detailed the number of rough sleepers within England and individual counts for each region of England and each Local Authority within each region. 
 
-My aim was to visualise the number of rough sleepers in each region of England across the last 10 years. I selected these rows from the data set. Since I aimed to visualize the number of rough sleepers in each region individually I removed the rows containing summary counts for 'England', 'London' and the 'Rest of England'. Then, I removed data associated with each Local Authority, columns containing the ONS code of each Region and Local Authority. 
+My aim was to visualise the number of rough sleepers in each region of England across the last 10 years. I selected these rows from the data set. Since I aimed to visualize the number of rough sleepers in each region individually I removed the rows containing summary counts for 'England', 'London' and the 'Rest of England'. Then I removed data associated with each Local Authority and the ONS codes for each Region and Local Authority. 
 
 ```{r}
 #select the columns required
@@ -64,7 +64,7 @@ The tibble below shows a short section of the data.
 head(rs1_long, 16)
 ```
 
-I then prepared the data for the second visualisation; a pie chart of the number of rough sleepers in each region proportional to population, in 2019. This required importing a further data set that contained government data on the population of each region in England. This could be used to calculate a proprtoional value of rough sleepers.  
+I then prepared the data for the second visualisation. My aim was to create a pie chart of the number of rough sleepers in England by region proportional to population. Data on the population of each region in England has not yet been released as such I visualised the proportional number of rough sleepers in 2019 instead. Therefore, in addition to preparing data on the number of rough sleepers I also imported a further data set  containing the population of each region in England. This could be used to calculate a proportional number of rough sleepers.  
 
 ```{r, message=FALSE}
 #import the dataset relating to number of rough sleepers for each region
@@ -195,4 +195,6 @@ rspiechart
 
 <span style="text-decoration:underline">Summary</span>
 
-The main visualisation show that the number of rough sleepers in England appears to have increased within all regions in England from 2010 to 2020. The supporting visualisation indicates that the largest proprtion of rough sleepers in England appear to be in London, and the South of England when taking into account the population of each region. 
+The main visualisation show that the number of rough sleepers in England seems to have increased overall across all regions in England from 2010 to 2020 though there was a reduction in the number between 2018 and 2020. However, the data from 2019 on wards should be interpreted with caution. The counts conducted in 2019 were obtained during the COVID-19 pandemic following the government's 'Everyone In' campaign that aimed to temporarily house rough sleepers. As such, the reduction observed between 2019 - 2020 is likely a result of this policy. Despite this action the data indicates that there is still a large increase in number of rough sleepers in 2020 compared to 2010. 
+
+The supporting visualisation indicates that the largest proportion of rough sleepers in England appear to be in London and the South of England (South East and South West) proportional to population of each region. 
