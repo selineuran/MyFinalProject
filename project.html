@@ -205,7 +205,7 @@ summary {
 <pre class="r"><code>#importing the raw data
 rawdata &lt;- read_excel(&quot;~/myfinalproject/processed/rs_statistics.xlsx&quot;)</code></pre>
 <p>The raw data detailed the number of rough sleepers within England and individual counts for each region of England and each Local Authority within each region.</p>
-<p>My aim was to visualise the number of rough sleepers in each region of England across the last 10 years. I selected these rows from the data set. Since I aimed to visualize the number of rough sleepers in each region individually I removed the rows containing summary counts for ‘England’, ‘London’ and the ‘Rest of England’. Then, I removed data associated with each Local Authority, columns containing the ONS code of each Region and Local Authority.</p>
+<p>My aim was to visualise the number of rough sleepers in each region of England across the last 10 years. I selected these rows from the data set. Since I aimed to visualize the number of rough sleepers in each region individually I removed the rows containing summary counts for ‘England’, ‘London’ and the ‘Rest of England’. Then I removed data associated with each Local Authority and the ONS codes for each Region and Local Authority.</p>
 <pre class="r"><code>#select the columns required
 rs1&lt;- rawdata %&gt;% select(3, 5:15)
 
@@ -237,7 +237,7 @@ head(rs1_long, 16)</code></pre>
 ## 14 North West               2011     149
 ## 15 South East               2011     430
 ## 16 South West               2011     337</code></pre>
-<p>I then prepared the data for the second visualisation; a pie chart of the number of rough sleepers in each region proportional to population, in 2019. This required importing a further data set that contained government data on the population of each region in England. This could be used to calculate a proprtoional value of rough sleepers.</p>
+<p>I then prepared the data for the second visualisation. My aim was to create a pie chart of the number of rough sleepers in England by region proportional to population. Data on the population of each region in England has not yet been released as such I visualised the proportional number of rough sleepers in 2019 instead. Therefore, in addition to preparing data on the number of rough sleepers I also imported a further data set containing the population of each region in England. This could be used to calculate a proportional number of rough sleepers.</p>
 <pre class="r"><code>#import the dataset relating to number of rough sleepers for each region
 rawdata &lt;- read_excel(&quot;~/myfinalproject/processed/rs_statistics.xlsx&quot;)
 #import the dataset relating to the population of eeach region
