@@ -4,7 +4,7 @@ author: "Seline Uran"
 output: html_document
 ---
 ```{r = diagram1, echo=FALSE, message=FALSE}
-#To begin load the following libraries
+#To begin load the following libraries and ensure the .zip file has been downloaded to 'Documents' folder on the PC. 
 library(ggplot2)
 library(readxl)
 library(RColorBrewer)
@@ -64,60 +64,23 @@ The tibble below shows a short section of the data.
 head(rs1_long, 16)
 ```
 
-I then prepared the data for the second visualisation. My aim was to create a pie chart of the number of rough sleepers in England by region proportional to population. Data on the population of each region in England has not yet been released as such I visualised the proportional number of rough sleepers in 2019 instead. Therefore, in addition to preparing data on the number of rough sleepers I also imported a further data set  containing the population of each region in England. This could be used to calculate a proportional number of rough sleepers.  
+I then prepared the data for the second visualisation. My aim was to create a pie chart of the number of rough sleepers in England by region.  
 
 ```{r, message=FALSE}
 #import the dataset relating to number of rough sleepers for each region
 rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
-#import the dataset relating to the population of eeach region
-rawdata2<-read_excel("~/myfinalproject/processed/population.xlsx") 
 
-#for the first data set pertaining to the number of rough sleepers
 #select rows of interest
 rs2<- rawdata %>% slice(2, 4:11)
 #select the columns of interest
 rs2<- rs2 %>% select (3, 14)
 
-#convert to a 'long' format
+#convert to a 'long' format so that the data can be input to be visualised by ggplot
 rs2_long <- rs2 %>% 
   gather(Year, Number, -Region)
 
-#for the data set containing the population for each region
-#the rows and columns of interest are selected
-rs3<- rawdata2 %>% slice(9, 23, 67, 92, 138, 173, 224, 258, 329)
-rs3<- rs3 %>% select(2, 5)
-
-#columns are renamed appropriately
-rs3<- rs3 %>% 
-  rename(
-    Region = ...2,
-   "2019" = ...5)
-
-#convert the data to 'long' format
-rs3_long <- rs3 %>% 
-  gather(Year, Number, -Region)
-#the Number column is converted to a numeric variable
-rs3_long$Number <- as.numeric(as.character(rs3_long$Number))
-
-#dataset is reordered to match the other data set
-rs3_long<- rs3_long %>% arrange(Region)
-
-#column of interest is then selected and renamed appropriately
-rs3_long<- rs3_long %>% select(3)
-rs3_long<- rs3_long %>%
-    rename(Population = Number)
-
-#then a new dataset is generated so the number of RS in each region proportional to population can be generated in the pie chart
-#the two datasets are combined into a new table
-newtable<- cbind(rs2_long, rs3_long)
-newtable <- transform(newtable, #calculates % of the RS withi the region population
-                      Percentage = Number / Population) 
-
-#select the columns to be used for the pie chart visualisation
-newtable <- newtable %>% select(1,2,5)
-
-#first six lines of the new data set
-head(newtable)
+#displays the first six rows of the tibble
+head(rs2_long)
 ```
 
 <span style="text-decoration:underline">Data Visualisation</span> 
@@ -151,23 +114,20 @@ ggsave("figures/rs1plot.png") #saves the graph as an image in figs folder
 rs1plot #generates the plot
 ```
 
-Graph 2: Proportion of Rough Sleepers in England by Region (2019) 
+Graph 2: Percentage of Rough Sleepers in England by Region (2019) 
 
 ``` {r = second visualisation, message=FALSE, results='hide'}
-#look at the data prepared previously
-view(newtable)
-
 #generate a dataframe of the data
-rspie<- data.frame(newtable)
+rspie<- data.frame(rs2_long)
 
 #generate a colour palette with more than 8 colours by extending ggplot palette
 nb.cols <- 9 
 mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nb.cols) 
 
 #simple barplot is generated of the dataframe first
-bp<- ggplot(rspie, aes(x="", y=Percentage, fill=Region))+
+bp<- ggplot(rspie, aes(x="", y=Number, fill=Region))+
   geom_bar(width = 1, stat = "identity") + 
-  geom_text(aes(label = paste(round(Percentage / sum(Percentage) * 100, 1), "%"), x = 1.7),
+  geom_text(aes(label = paste(round(Number / sum(Number) * 100, 1), "%"), x = 1.7),
          position = position_stack(vjust = 0.5)) +
   ggtitle("help") +
   theme(axis.text = element_blank(),
@@ -182,7 +142,7 @@ bp<- ggplot(rspie, aes(x="", y=Percentage, fill=Region))+
 #barplot is converted into a piechart
 rspiechart <- bp + coord_polar(theta = "y", start=0) +
   theme_void() +
-  ggtitle("Proportion of Rough Sleepers in England by Region (2019)")
+  ggtitle("Percentage of Rough Sleepers in England by Region (2019)")
 
 #saves the graph as an image in figs folder
 ggsave("figures/rspiechart.png")
@@ -195,6 +155,9 @@ rspiechart
 
 <span style="text-decoration:underline">Summary</span>
 
-The main visualisation show that the number of rough sleepers in England seems to have increased overall across all regions in England from 2010 to 2020 though there was a reduction in the number between 2018 and 2020. However, the data from 2019 on wards should be interpreted with caution. The counts conducted in 2019 were obtained during the COVID-19 pandemic following the government's 'Everyone In' campaign that aimed to temporarily house rough sleepers. As such, the reduction observed between 2019 - 2020 is likely a result of this policy. Despite this action the data indicates that there is still a large increase in number of rough sleepers in 2020 compared to 2010. 
+The main visualisation show that the number of rough sleepers in England seems to have increased overall across all regions in England from 2010 to 2020 though there was a reduction in the number between 2018 and 2020. However, the data from 2019 on wards should be interpreted with caution. The counts conducted in 2019 were obtained during the COVID-19 pandemic following the government's 'Everyone In' campaign that aimed to temporarily house rough sleepers. As such, the reduction observed between 2019 - 2020 is likely a result of this policy. Despite this action the data indicates that there is still a large increase in number of rough sleepers in 2020 compared to 2010. The supporting visualisation indicates that the largest proportion of rough sleepers in England appear to be in London and the South of England (South East and South West). 
 
-The supporting visualisation indicates that the largest proportion of rough sleepers in England appear to be in London and the South of England (South East and South West) proportional to population of each region. 
+
+<span style="text-decoration:underline">Future Directions</span>
+
+A recommendation for improvement on the current visualisation of the data set might be to consider the number of rough sleepers in each region proportional to the population of that region. This would allow for a more accurate comparison across regions of the number of rough sleepers. In addition, the age distribution and composition of gender and ethnicity of rough sleepers in each region were not visualised. These factors might reveal greater insight into the trends within the population of rough sleepers across each region in England and therefore those groups most at risk. 
