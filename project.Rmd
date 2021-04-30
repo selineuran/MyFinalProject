@@ -34,7 +34,7 @@ After having removed all sheets from the excel document except for the sheet tha
 
 ```{r}
 #importing the raw data
-rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
+rawdata <- read_excel("~/myfinalproject-main/processed/rs_statistics.xlsx")
 ```
 
 The raw data detailed the number of rough sleepers within England and individual counts for each region of England and each Local Authority within each region. 
@@ -67,9 +67,6 @@ head(rs1_long, 16)
 I then prepared the data for the second visualisation. My aim was to create a pie chart of the number of rough sleepers in England by region.  
 
 ```{r, message=FALSE}
-#import the dataset relating to number of rough sleepers for each region
-rawdata <- read_excel("~/myfinalproject/processed/rs_statistics.xlsx")
-
 #select rows of interest
 rs2<- rawdata %>% slice(2, 4:11)
 #select the columns of interest
