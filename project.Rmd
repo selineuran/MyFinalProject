@@ -4,7 +4,7 @@ author: "Seline Uran"
 output: html_document
 ---
 ```{r = diagram1, echo=FALSE, message=FALSE}
-#To begin load the following libraries and ensure the .zip file has been downloaded to 'Documents' folder on the PC. 
+#To begin load the following libraries and transfer the .zip file to the 'Documents' folder 
 library(ggplot2)
 library(readxl)
 library(RColorBrewer)
@@ -34,7 +34,7 @@ After having removed all sheets from the excel document except for the sheet tha
 
 ```{r}
 #importing the raw data
-rawdata <- read_excel("~/myfinalproject-main/processed/rs_statistics.xlsx")
+rawdata <- read_excel("~/myfinalproject-main/myfinalproject-main/processed/rs_statistics.xlsx")
 ```
 
 The raw data detailed the number of rough sleepers within England and individual counts for each region of England and each Local Authority within each region. 
