@@ -104,7 +104,7 @@ rs1plot <-ggplot(rs1_long, aes(x = Year, y = Number, color = Region, group = Reg
        x="Year", y = "Number of Rough Sleepers") + #labels the x/y axis and title for plot
   scale_y_continuous(breaks=c(0, 300, 600, 900, 1200, 1400), limits=c(0, 1400)) #adjust the scale
 
-ggsave("figures/rs1plot.png") #saves the graph as an image in figs folder
+ggsave("rs1plot.png") #saves the graph as an image in figs folder
 ```
 
 ```{r echo=FALSE, warning=FALSE}
@@ -142,7 +142,7 @@ rspiechart <- bp + coord_polar(theta = "y", start=0) +
   ggtitle("Percentage of Rough Sleepers in England by Region (2019)")
 
 #saves the graph as an image in figs folder
-ggsave("figures/rspiechart.png")
+ggsave("rspiechart.png")
 ```
 
 ```{r echo=FALSE, warning=FALSE}
