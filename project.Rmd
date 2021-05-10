@@ -34,7 +34,7 @@ After having removed all sheets from the excel document except for the sheet tha
 
 ```{r}
 #importing the raw data
-rawdata <- read_excel("~/myfinalproject-main/processed/rs_statistics.xlsx")
+rawdata <- read_excel("rs_statistics.xlsx")
 ```
 
 The raw data detailed the number of rough sleepers within England and individual counts for each region of England and each Local Authority within each region. 
