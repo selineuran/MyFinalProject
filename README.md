@@ -1,3 +1,3 @@
 My Data Visualisation Project
 
-https://selineuran.github.io/myfinalproject/project
+https://selineuran.github.io/myfinalproject
